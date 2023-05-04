@@ -1,4 +1,4 @@
-package servidorBase;
+package servidor.base.datos;
 
 public class Producto {
 	

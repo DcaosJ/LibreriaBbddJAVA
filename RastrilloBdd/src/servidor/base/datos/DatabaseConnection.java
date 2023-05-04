@@ -1,4 +1,4 @@
-package servidorBase;
+package servidor.base.datos;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

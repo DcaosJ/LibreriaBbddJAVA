@@ -1,16 +1,16 @@
-package servidorBase;
+package servidor.base.datos;
 
-import java.time.LocalDate;
+
 
 public class Pedido {
 	
 	private int id_pedido;
 	private double pago;
-	private LocalDate fecha;
+	private String fecha;
 	private int id_cliente;
 	
 	
-	public Pedido(int id_pedido, double pago, LocalDate fecha, int id_cliente) {
+	public Pedido(int id_pedido, double pago, String fecha, int id_cliente) {
 		super();
 		this.id_pedido = id_pedido;
 		this.pago = pago;
@@ -39,12 +39,12 @@ public class Pedido {
 	}
 
 
-	public LocalDate getFecha() {
+	public String getFecha() {
 		return fecha;
 	}
 
 
-	public void setFecha(LocalDate fecha) {
+	public void setFecha(String fecha) {
 		this.fecha = fecha;
 	}
 
