@@ -34,76 +34,88 @@ public class DatabaseManager {
 			e.printStackTrace();
 		}
 	}
-	 public List<Producto> getProductos() {
-	        List<Producto> productos = new ArrayList<>();
-	        String query = "SELECT * FROM producto";
-	        try (Statement statement = connection.createStatement()) {
-	            ResultSet rs = statement.executeQuery(query);
-	            while (rs.next()) {
-	                Producto producto = new Producto(
-	                        rs.getInt(1),
-	                        rs.getString(2),
-	                        rs.getString(3),
-	                        rs.getString(4),
-	                        rs.getDouble(5),
-	                        rs.getInt(6)
-	                );
-	                productos.add(producto);
-	            }
-	        } catch (SQLException e) {
-	            e.printStackTrace();
-	        }
-	        return productos;
-	    }
-		
-	
-	 public List<Cliente> getClientes() {
-	        List<Cliente> clientes = new ArrayList<>();
-	        String query = "SELECT * FROM cliente";
-	        try (Statement statement = connection.createStatement()) {
-	            ResultSet rs = statement.executeQuery(query);
-	            while (rs.next()) {
-	                Cliente cliente = new Cliente(
-	                        rs.getInt(1),
-	                        rs.getString(2),
-	                        rs.getString(3)
-	                      
-	                );
-	                clientes.add(cliente);
-	            }
-	        } catch (SQLException e) {
-	            e.printStackTrace();
-	        }
-	        return clientes;
-	    }
-	 
-	 
-	 public List<Pedido> getPedidos() {
-	        List<Pedido> pedidos = new ArrayList<>();
-	        String query = "SELECT * FROM pedido";
-	        try (Statement statement = connection.createStatement()) {
-	            ResultSet rs = statement.executeQuery(query);
-	            while (rs.next()) {
-	                Pedido pedido = new Pedido(
-	                        rs.getInt(1),
-	                        rs.getDouble(2),
-	                        rs.getString(3),
-	                        rs.getInt(4)
-	                      
-	                );
-	                pedidos.add(pedido);
-	            }
-	        } catch (SQLException e) {
-	            e.printStackTrace();
-	        }
-	        return pedidos;
-	    }
-	
-	
-	
+	//1--Se debe poder consultar los datos de cualquiera de las tablas de la bbdd
+	/**
+	 * 
+	 * @return
+	 */
+	public List<Producto> getProductos() {
+		List<Producto> productos = new ArrayList<>();
+		String query = "SELECT * FROM producto";
+		try (Statement statement = connection.createStatement()) {
+			ResultSet rs = statement.executeQuery(query);
+			while (rs.next()) {
+				Producto producto = new Producto(
+						rs.getInt(1),
+						rs.getString(2),
+						rs.getString(3),
+						rs.getString(4),
+						rs.getDouble(5),
+						rs.getInt(6)
+						);
+				productos.add(producto);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return productos;
+	}
+	/**
+	 * 
+	 * @return
+	 */
+
+	public List<Cliente> getClientes() {
+		List<Cliente> clientes = new ArrayList<>();
+		String query = "SELECT * FROM cliente";
+		try (Statement statement = connection.createStatement()) {
+			ResultSet rs = statement.executeQuery(query);
+			while (rs.next()) {
+				Cliente cliente = new Cliente(
+						rs.getInt(1),
+						rs.getString(2),
+						rs.getString(3)
+
+						);
+				clientes.add(cliente);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return clientes;
+	}
+	/**
+	 * 
+	 * @return
+	 */
+
+	public List<Pedido> getPedidos() {
+		List<Pedido> pedidos = new ArrayList<>();
+		String query = "SELECT * FROM pedido";
+		try (Statement statement = connection.createStatement()) {
+			ResultSet rs = statement.executeQuery(query);
+			while (rs.next()) {
+				Pedido pedido = new Pedido(
+						rs.getInt(1),
+						rs.getDouble(2),
+						rs.getString(3),
+						rs.getInt(4)
+
+						);
+				pedidos.add(pedido);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return pedidos;
+	}
+
+
+	//2 --Se debe poder filtrar los datos de cualquiera de las tablas de la bbdd, al menos por 2 campos
+
 	public void getData (String source, ArrayList<String> fields,
 			HashMap<String,Object> filter) {
-		
+
 	}
 	/**
 	 * 
@@ -114,11 +126,11 @@ public class DatabaseManager {
 		ArrayList<Producto> productos = null;
 		int i=0, type=Types.INTEGER;
 		String whereData="";
-		
+
 		for(String key:filter.keySet()) {
 			whereData+=key+"=? AND"; 
 		}
-		
+
 		whereData = whereData.substring(0, whereData.length()-6);
 		try {
 			PreparedStatement ps = this.connection.prepareStatement("SELECT id_articulo,"
@@ -136,7 +148,7 @@ public class DatabaseManager {
 				}
 				ps.setObject(++i, value, type);				
 			}
-			
+
 			ResultSet rs = ps.executeQuery();
 			productos = new ArrayList<Producto>();
 			while(rs.next()) {
@@ -147,7 +159,7 @@ public class DatabaseManager {
 						rs.getDouble(5),
 						rs.getInt(6)));
 			}
-			
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -158,17 +170,17 @@ public class DatabaseManager {
 	 * @param filter
 	 * @return clientes
 	 */
-	
-	
+
+
 	public ArrayList<Cliente> getClientes(HashMap<String,Object> filter){
 		ArrayList<Cliente> clientes = null;
 		int i=0, type=Types.INTEGER;
 		String whereData="";
-		
+
 		for(String key:filter.keySet()) {
 			whereData+=key+"=? AND"; 
 		}
-		
+
 		whereData = whereData.substring(0, whereData.length()-6);
 		try {
 			PreparedStatement ps = this.connection.prepareStatement("SELECT id_cliente,"
@@ -186,22 +198,22 @@ public class DatabaseManager {
 				}
 				ps.setObject(++i, value, type);				
 			}
-			
+
 			ResultSet rs = ps.executeQuery();
 			clientes = new ArrayList<Cliente>();
 			while(rs.next()) {
 				clientes.add(new Cliente(rs.getInt(1),
 						rs.getString(2),
 						rs.getString(3)));  
-					
+
 			}
-			
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return clientes;
 	}
-	
+
 	/**
 	 * 
 	 * @param filter
@@ -211,11 +223,11 @@ public class DatabaseManager {
 		ArrayList<Pedido> pedidos = null;
 		int i=0, type=Types.INTEGER;
 		String whereData="";
-		
+
 		for(String key:filter.keySet()) {
 			whereData+=key+"=? AND"; 
 		}
-		
+
 		whereData = whereData.substring(0, whereData.length()-6);
 		try {
 			PreparedStatement ps = this.connection.prepareStatement("SELECT id_cliente,"
@@ -233,20 +245,157 @@ public class DatabaseManager {
 				}
 				ps.setObject(++i, value, type);				
 			}
-			
+
 			ResultSet rs = ps.executeQuery();
 			pedidos = new ArrayList<Pedido>();
 			while(rs.next()) {
 				pedidos.add(new Pedido(rs.getInt(1),
 						rs.getDouble(2),
-                        rs.getString(3),
-                        rs.getInt(4)));
-					
+						rs.getString(3),
+						rs.getInt(4)));
+
 			}
-			
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return pedidos;
 	}
+	//4--Se debe poder modificar cualquiera de los registros de una tabla---
+	/**
+	 * 
+	 * @param producto
+	 * @return
+	 */
+	public boolean updateProducto(Producto producto) {
+		boolean updated = false;
+		String changes="";
+		try {
+			changes = "UPDATE producto SET " +  
+					"',?='" + producto.getNombre() + "',?='" + producto.getDescripcion() +
+					"',?='" + producto.getPrecio() + "',?='" + producto.getStock_cantidad() +
+					"' WHERE id=" + producto.getId_articulo();
+
+			updated= (this.statement.executeUpdate(changes, new String[] {"nombre_categoria",
+					"nombre","descripcion","precio", "stock_cantidad"}))>0;
+					this.statement.close();
+		}catch(SQLException e) {
+			return updated;
+		}	
+		return updated;
+	}
+	/**
+	 * 
+	 * @param cliente
+	 * @return
+	 */
+	public boolean updateCliente(Cliente cliente) {
+		boolean updated = false;
+		String changes="";
+		try {
+			changes = "UPDATE cliente SET ?='" + cliente.getNombre() +
+					"',?='" + cliente.getDni() +
+					"' WHERE id=" + cliente.getId_cliente();
+
+			updated= (this.statement.executeUpdate(changes, new String[] {"nombre",
+					"dni"}))>0;
+					this.statement.close();
+		}catch(SQLException e) {
+			return updated;
+		}	
+		return updated;
+	}
+	/**
+	 * 
+	 * @param pedido
+	 * @return
+	 */
+	public boolean updatePedido(Pedido pedido) {
+		boolean updated = false;
+		String changes="";
+		try {
+			changes = "UPDATE pedido SET ?='" + pedido.getPago() +
+					"',?='" + pedido.getPago() + 	"',?='" + pedido.getFecha() +
+					"',?='" + pedido.getId_cliente() +
+					"' WHERE id_pedido=" + pedido.getId_pedido();
+
+			updated= (this.statement.executeUpdate(changes, new String[] {"pago",
+					"fecha", "id_cliente"}))>0;
+					this.statement.close();
+		}catch(SQLException e) {
+			return updated;
+		}	
+		return updated;
+	}
+
+
+
+	//5--Se debe poder añadir nuevos registros a una tabla, de uno en uno o varios---	
+	/**
+	 * Añade un nuevo producto a la base de datos
+	 * @param producto Producto que se va a añadir
+	 * @return True si se consigue añadir el nuevo Producto
+	 */
+	public boolean addProducto(Producto producto) {
+		String insert="";
+		boolean added=false;
+		try {
+			insert = "'" + producto.getId_articulo() +
+					"','" +  producto.getNombre_categoria() +
+					"','" +  producto.getNombre() +
+					"','" +  producto.getDescripcion() +
+					"','" +  producto.getPrecio() +
+					"','" + producto.getStock_cantidad() + "'";
+			added = (this.statement.executeUpdate("INSERT INTO producto (id_articulo,"
+					+ "nombre_categoria, nombre, descripcion, precio, "
+					+ "stock_cantidad VALUES(" + insert +")"))>0;
+					this.statement.close();
+					return added;
+		}catch(SQLException e) {
+			return added;
+		}
+	}
+
+	/**
+	 * Añade un nuevo cliente a la base de datos
+	 * @param cliente Cliente que se va a añadir
+	 * @return True si se consigue añadir el nuevo cliente
+	 */
+	public boolean addCliente(Cliente cliente) {
+		String insert="";
+		boolean added=false;
+		try {
+			insert = "'" + cliente.getId_cliente() +
+					"','" +  cliente.getNombre() +
+					"','" + cliente.getDni() + "'";
+			added = (this.statement.executeUpdate("INSERT INTO cliente (id_cliente,"
+					+ "nombre, dni, VALUES(" + insert +")"))>0;
+					this.statement.close();
+					return added;
+		}catch(SQLException e) {
+			return added;
+		}
+	}
+	/**
+	 * Añade un nuevo pedido a la base de datos
+	 * @param pedido Pedido que se va a añadir
+	 * @return True si se consigue añadir el nuevo pedido
+	 */
+	public boolean addPedido(Pedido pedido) {
+		String insert="";
+		boolean added=false;
+		try {
+			insert = "'" + pedido.getId_pedido() +
+					"','" +  pedido.getPago() +
+					"','" +  pedido.getFecha() +
+					"','" + pedido.getId_cliente() + "'";
+			added = (this.statement.executeUpdate("INSERT INTO pedido (id_pedido,"
+					+ "pago, fecha, id_cliente VALUES(" + insert +")"))>0;
+					this.statement.close();
+					return added;
+		}catch(SQLException e) {
+			return added;
+		}
+	}
+
 }
