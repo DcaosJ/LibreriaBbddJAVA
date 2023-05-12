@@ -16,6 +16,7 @@ public class DatabaseManager {
 
 	private Connection connection = null;
 	private Statement statement = null;
+	private PreparedStatement psStatement = null;
 	private boolean productosUpdate = false;
 	private ArrayList<Producto> productoData;
 	/**
@@ -40,20 +41,21 @@ public class DatabaseManager {
 	 * @return
 	 */
 	public List<Producto> getProductos() {
-		List<Producto> productos = new ArrayList<>();
-		String query = "SELECT * FROM producto";
-		try (Statement statement = connection.createStatement()) {
-			ResultSet rs = statement.executeQuery(query);
+		List<Producto> productos = null;
+		try {
+			PreparedStatement ps = this.connection.
+					prepareStatement("SELECT * FROM producto");
+			ResultSet rs = ps.executeQuery();
+			productos = new ArrayList<Producto>();
 			while (rs.next()) {
-				Producto producto = new Producto(
+				productos.add(new Producto(
 						rs.getInt(1),
 						rs.getString(2),
 						rs.getString(3),
 						rs.getString(4),
 						rs.getDouble(5),
 						rs.getInt(6)
-						);
-				productos.add(producto);
+						));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -66,18 +68,18 @@ public class DatabaseManager {
 	 */
 
 	public List<Cliente> getClientes() {
-		List<Cliente> clientes = new ArrayList<>();
-		String query = "SELECT * FROM cliente";
-		try (Statement statement = connection.createStatement()) {
-			ResultSet rs = statement.executeQuery(query);
+		List<Cliente> clientes = null;
+		try {
+			PreparedStatement ps = this.connection.
+					prepareStatement("SELECT * FROM cliente");
+			ResultSet rs = ps.executeQuery();
+			clientes = new ArrayList<Cliente>();
 			while (rs.next()) {
-				Cliente cliente = new Cliente(
+				clientes.add(new Cliente(
 						rs.getInt(1),
 						rs.getString(2),
 						rs.getString(3)
-
-						);
-				clientes.add(cliente);
+						));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -90,19 +92,18 @@ public class DatabaseManager {
 	 */
 
 	public List<Pedido> getPedidos() {
-		List<Pedido> pedidos = new ArrayList<>();
-		String query = "SELECT * FROM pedido";
-		try (Statement statement = connection.createStatement()) {
-			ResultSet rs = statement.executeQuery(query);
+		List<Pedido> pedidos = null;
+		try {
+			PreparedStatement ps = this.connection.
+					prepareStatement("SELECT * FROM pedido");
+			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
-				Pedido pedido = new Pedido(
+				pedidos.add(new Pedido(
 						rs.getInt(1),
 						rs.getDouble(2),
 						rs.getString(3),
 						rs.getInt(4)
-
-						);
-				pedidos.add(pedido);
+						));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -170,8 +171,6 @@ public class DatabaseManager {
 	 * @param filter
 	 * @return clientes
 	 */
-
-
 	public ArrayList<Cliente> getClientes(HashMap<String,Object> filter){
 		ArrayList<Cliente> clientes = null;
 		int i=0, type=Types.INTEGER;
@@ -213,7 +212,6 @@ public class DatabaseManager {
 		}
 		return clientes;
 	}
-
 	/**
 	 * 
 	 * @param filter
@@ -298,8 +296,8 @@ public class DatabaseManager {
 					"' WHERE id=" + cliente.getId_cliente();
 
 			updated= (this.statement.executeUpdate(changes, new String[] {"nombre",
-					"dni"}))>0;
-					this.statement.close();
+			"dni"}))>0;
+			this.statement.close();
 		}catch(SQLException e) {
 			return updated;
 		}	
@@ -327,9 +325,6 @@ public class DatabaseManager {
 		}	
 		return updated;
 	}
-
-
-
 	//5--Se debe poder añadir nuevos registros a una tabla, de uno en uno o varios---	
 	/**
 	 * Añade un nuevo producto a la base de datos
@@ -355,7 +350,6 @@ public class DatabaseManager {
 			return added;
 		}
 	}
-
 	/**
 	 * Añade un nuevo cliente a la base de datos
 	 * @param cliente Cliente que se va a añadir
@@ -397,5 +391,59 @@ public class DatabaseManager {
 			return added;
 		}
 	}
+	//--6 Se debe poder eliminar registros de una tabla, de uno en uno o varios---- 
+	/**
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public boolean deleteProducto(int id) {
+		boolean delete = false;
 
+		try {
+			this.psStatement = this.connection.prepareStatement("DELETE FROM produto WHERR id = ?");
+
+			delete = this.psStatement.executeUpdate()>0;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} 
+		return delete;
+	}
+	/**
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public boolean deleteCliente(int id) {
+		boolean delete = false;
+
+		try {
+			this.psStatement = this.connection.prepareStatement("DELETE FROM cliente WHERR id = ?");
+
+			delete = this.psStatement.executeUpdate()>0;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} 
+		return delete;
+	}
+	/**
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public boolean deletePedido(int id) {
+		boolean delete = false;
+
+		try {
+			this.psStatement = this.connection.prepareStatement("DELETE FROM pedido WHERR id = ?");
+
+			delete = this.psStatement.executeUpdate()>0;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} 
+		return delete;
+	}
+	//--8 Se podrán importar datos de una tabla desde un fichero XML
+
+	//--9 Se podrán exportar datos de una tabla desde hacia un fichero XML, no tiene porque ser todos los datos de la tabla
 }
